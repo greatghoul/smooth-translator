@@ -1,0 +1,24 @@
+.ggst_reset,
+.ggst_reset * {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font-family: "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", "Microsoft Yahei", sans-serif;
+  vertical-align: baseline;
+  width: auto;
+  height: auto;
+  background: none;
+  border-radius: 0;
+  text-align: left;
+}
+
+.ggst_fade.fade-enter-active, {
+.ggst_fade.fade-leave-active {
+  transition: opacity .5s;
+}
+
+.ggst_fade.fade-enter,
+.ggst.fade-leave-active {
+  opacity: 0;
+}
