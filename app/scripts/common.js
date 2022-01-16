@@ -7,3 +7,18 @@ const DEFAULT_SETTINGS = {
     '*': true
   },
 }
+
+const openExtensionPage = filename => {
+  const url = chrome.extension.getURL(filename)
+
+  chrome.tabs.query({}, function(tabs) {
+    var tab = tabs.find(tab => tab.url === url)
+
+    if (tab) {
+      chrome.tabs.reload(tab.id)
+      chrome.tabs.update(tab.id, { highlighted: true })
+    } else {
+      chrome.tabs.create({ url: url })
+    }
+  })
+}

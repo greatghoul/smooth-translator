@@ -4,8 +4,14 @@ Ractive.components.Translator = Ractive.extend({
     result: null,
   },
   on: {
-    openSettings () {
-
+    handleSettings () {
+      openExtensionPage("pages/options.html")
+    },
+    handleTranslate (context) {
+      if (context.event.key === "Enter") {
+        console.log("Searching", this.get("source"))
+        context.event.preventDefault()
+      }
     }
   },
   template: `
@@ -14,8 +20,8 @@ Ractive.components.Translator = Ractive.extend({
         autofocus
         placeholder="输入文字进行翻译 ..."
         rows="3"
-        lazy=true
         value="{{ source }}"
+        on-keypress="handleTranslate"
       ></textarea>
     </header>
 
@@ -26,7 +32,7 @@ Ractive.components.Translator = Ractive.extend({
     </main>
 
     <footer>
-      <a href="#" title="偏好设定" class="btn-settings" on-click="openSettings">
+      <a href="#" title="偏好设定" class="btn-settings" on-click="handleSettings">
         <SettingsIcon />
       </a>
     </footer>
