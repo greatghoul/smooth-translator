@@ -1,7 +1,3 @@
-@import 'mixins/reset';
-@import 'mixins/fade';
 @import 'components/result-list';
 @import 'components/result-toast';
 @import 'components/result';
-@import 'components/link-inspect-mode';
-

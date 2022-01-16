@@ -62,9 +62,6 @@
   "permissions": [
     "tabs",
     "storage",
-    "notifications",
-    "webRequest",
-    "webRequestBlocking",
     "*://fanyi.youdao.com/*",
     "*://dict.youdao.com/*"
   ],

@@ -1,22 +1,19 @@
-$font-color: #555;
+/* $font-color: #555;
 
 @import 'mixins/reset';
 @import 'components/loader';
-@import 'components/result';
+@import 'components/result'; */
 
 body {
   width: 240px;
   min-height: 85px;
   margin: 0;
   font-size: 14px;
-  color: $font-color;
+  color: #555;
   background-color: #F2F5F6;
 }
 
-[v-cloak] {
-  visibility: hidden;
-}
-
+/* 
 .translator {
   .input-box {
     padding: 5px 5px 2px 5px;;
@@ -97,4 +94,4 @@ label {
   input[type="checkbox"] {
     margin: 0;
   }
-}
+} */

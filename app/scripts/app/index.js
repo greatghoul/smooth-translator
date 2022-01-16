@@ -1,5 +1,4 @@
 import _ from 'lodash'
-import storage from 'chrome-storage-wrapper'
 import migrateOptions from './migrate-options'
 
 const defaults = {

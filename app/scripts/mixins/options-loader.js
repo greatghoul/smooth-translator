@@ -1,7 +1,3 @@
-import _ from 'lodash';
-import storage from 'chrome-storage-wrapper';
-import defaults from '../config/defaults';
-
 export default {
   data() {
     return {

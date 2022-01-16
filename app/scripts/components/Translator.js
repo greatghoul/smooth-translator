@@ -1,37 +1,109 @@
-<template>
-  <div id="app" v-cloak>
-    <loader v-if="loading" />
-    <div class="translator">
-      <section class="input-box">
-        <textarea
-          autofocus
-          placeholder="输入文字进行翻译 ..."
-          rows="3"
-          ref="source"
-          v-model.trim="source"
-          @keydown.esc.prevent.stop="escape"
-          @keydown.enter="translate"></textarea>
-      </section>
+Ractive.components.Translator = Ractive.extend({
+  data: {
+    source: "",
+    result: null,
+  },
+  on: {
+    openSettings () {
 
-      <div class="result-wrapper">
-        <result :result="result" theme="light" v-if="result"></result>
-      </div>
+    }
+  },
+  template: `
+    <header>
+      <textarea
+        autofocus
+        placeholder="输入文字进行翻译 ..."
+        rows="3"
+        lazy=true
+        value="{{ source }}"
+      ></textarea>
+    </header>
 
-      <footer>
-        <a href="#" title="偏好设定" class="btn-settings" @click="settings">
-          <icon name="cog" />
-        </a>
+    <main>
+      {{#result}}
+        <Result result="{{ result }}" theme="light" />
+      {{/result}} 
+    </main>
 
+    <footer>
+      <a href="#" title="偏好设定" class="btn-settings" on-click="openSettings">
+        <SettingsIcon />
+      </a>
+    </footer>
+  `,
+  css: `
+    header {
+      padding: 5px 5px 2px 5px;;
+    }
+
+    header textarea {
+      -webkit-appearance: textfield;
+      border: 1px inset #e0e0e0;
+      background-color: #fefbf5;
+      resize: none;
+      font-size: 12px;
+      line-height: 1.2em;
+      color: #888;
+      width: 100%;
+      margin: 0;
+      font-weight: bold;
+      box-sizing: border-box;
+    }
+
+    header textarea:active,
+    header textarea:focus {
+      outline: none;
+      background-color: #ffffd4;
+    }
+    
+    main {
+      padding: 0px 5px !important;
+    }
+    
+    footer {
+      height: 24px;
+      line-height: 24px;
+      padding: 0 5px;
+    }
+
+    footer .btn-settings {
+      float: right;
+    }
+
+    footer label {
+      font-size: 0.9em;
+      color: gray;
+      user-select: none;
+    }
+
+    footer label.enabled {
+      color: green;
+    }
+
+    footer label input[type="checkbox] {
+      margin: 0;
+    }
+    
+    footer label .site {
+      font-style: italic;
+      font-weight: bold;
+      font-size: .9em;
+      display: inline-block;
+      vertical-align: bottom;
+      max-width: 50px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  `
+})
+
+/*
         <label :class="{ enabled: rule.enabled }" v-if="rule">
-          <input type="checkbox"
-                 v-model="rule.enabled"
-                 @change="saveRule(rule)" />
+          <input type="checkbox" checked="rule.enabled"
+                  @change="saveRule(rule)" />
           在 <span class="site" :title="rule.site">{{ rule.site }}</span> 启用划词翻译
         </label>
-      </footer>
-    </div>
-  </div>
-</template>
 
 <script>
 import _ from 'lodash'
@@ -44,14 +116,6 @@ import { getActiveTab } from '../helpers/tabs'
 
 export default {
   mixins: [OptionsLoader],
-  data() {
-    return {
-      source: '',
-      result: null,
-      loading: false,
-      rule: null
-    }
-  },
   created() {
     this.initOptions().then(() => {
       getActiveTab(tab => this.initRule(tab.hostname))
@@ -126,3 +190,4 @@ export default {
   },
 }
 </script>
+*/
