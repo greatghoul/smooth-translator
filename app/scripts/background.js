@@ -6,33 +6,33 @@
 // import { trim } from 'lodash'
 // import app from './app'
 
-// const PAT_WORD = /^[a-z]+('|'s)?$/i
+const PAT_WORD = /^[a-z]+('|'s)?$/i
 
-// function translateText (text) {
-//   const sourceText = trim(text)
-//   const cacheKey = `text:v2:${sourceText}`
-//   let result = lscache.get(cacheKey)
-//   return result ? Promise.resolve(result) : translator.translate(sourceText)
-// }
+function translateText (text) {
+  const sourceText = textStripe(text)
+  const cacheKey = `text:v2:${sourceText}`
+  let result = lscache.get(cacheKey)
+  return result ? Promise.resolve(result) : translator.translate(sourceText)
+}
 
-// function isWord(text) {
-//   return PAT_WORD.test(text)
-// }
+function isWord(text) {
+  return PAT_WORD.test(text)
+}
 
-// dispatchMessage({
-//   translate (message, sender, sendResponse) {
-//     storage.get('notifyTimeout').then(options => {
-//       translateText(message.text).then(result => {
-//         if (message.from === 'page') {
-//           result.timeout = options.notifyTimeout
-//         } else {
-//           window.localStorage.setItem('current', message.text)
-//         }
+dispatchMessage({
+  translate (message, _, sendResponse) {
+    getSettings("settings", settings => {
+      translateText(message.text).then(result => {
+        if (message.from === 'page') {
+          result.timeout = options.notifyTimeout
+        } else {
+          window.localStorage.setItem('current', message.text)
+        }
 
-//         sendResponse(result)
-//       })
-//     })
-//   },
+        sendResponse(result)
+      })
+    })
+  },
 
 //   selection (message, sender, sendResponse) {
 //     window.localStorage.setItem('current', message.text)

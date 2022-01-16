@@ -1,13 +1,6 @@
-const template = `
-  {{#if loading}}
-    <Loader />
-  {{else}}
-    <Translator />
-  {{/if}}  
-`
 Ractive({
   target: "#app",
-  template: template,
+  template: '<Translator settings={{ settings }} loading={{ loading }} />',
   data: {
     settings: DEFAULT_SETTINGS,
     loading: true,

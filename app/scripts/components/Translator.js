@@ -1,5 +1,7 @@
 Ractive.components.Translator = Ractive.extend({
   data: {
+    loading: false,
+    settings: null,
     source: "",
     result: null,
   },
@@ -8,13 +10,25 @@ Ractive.components.Translator = Ractive.extend({
       openExtensionPage("pages/options.html")
     },
     handleTranslate (context) {
-      if (context.event.key === "Enter") {
-        console.log("Searching", this.get("source"))
-        context.event.preventDefault()
-      }
+      if (context.event.key !== "Enter") return
+
+      context.event.preventDefault()
+
+      this.set("loading", true)
+      chrome.runtime.sendMessage({
+        type: "translate",
+        from: "popup",
+        text: this.get("source"),
+      }, result => {
+        this.set({ result: result })
+      })
     }
   },
   template: `
+    {{#loading}}
+      <Loader />
+    {{/loading}}
+    
     <header>
       <textarea
         autofocus

@@ -8,6 +8,10 @@ const DEFAULT_SETTINGS = {
   },
 }
 
+const textStripe = text => {
+  return (text || "").replace(/(^\s+|\s+$)/, "")
+}
+
 const openExtensionPage = filename => {
   const url = chrome.extension.getURL(filename)
 
@@ -20,5 +24,24 @@ const openExtensionPage = filename => {
     } else {
       chrome.tabs.create({ url: url })
     }
+  })
+}
+
+const dispatchMessage = mapping => {
+  chrome.runtime.onMessage.addListener(
+    function(message, sender, sendResponse) {
+      const handler = mapping[message.type]
+      if (typeof handler === "function") {
+        handler(message, sender, sendResponse)
+      }
+
+      return true
+    }
+  )
+}
+
+const getSettings = (key, callback) => {
+  chrome.storage.sync.get("settings", result => {
+    callback(Object.assign(DEFAULT_SETTINGS, result["settings"]))
   })
 }

@@ -13,6 +13,8 @@
 
   "background": {
     "scripts": [
+      "scripts/libs/lscache.min.js",
+      "scripts/common.js",
       "scripts/background.js"
     ],
     "persistent": true
