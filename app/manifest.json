@@ -1,26 +1,21 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "default_locale": "zh_CN",
 
   "name": "__MSG_appName__",
   "short_name": "__MSG_appShortName__",
   "description": "__MSG_appDescription__",
-  "version": "0.2.0",
+  "version": "0.3",
 
   "icons": {
     "128": "images/icon-128.png"
   },
 
   "background": {
-    "scripts": [
-      "scripts/libs/lscache.min.js",
-      "scripts/common.js",
-      "scripts/background.js"
-    ],
-    "persistent": true
+    "service_worker": "service_worker.js"
   },
 
-  "browser_action": {
+  "action": {
     "default_icon": "images/icon-128.png",
     "default_title": "__MSG_browserActionTitle__",
     "default_popup": "pages/popup.html"
@@ -64,9 +59,11 @@
   "permissions": [
     "tabs",
     "storage",
-    "*://fanyi.youdao.com/*",
-    "*://dict.youdao.com/*"
+    "scripting"
   ],
 
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+  "host_permissions": [
+    "*://fanyi.youdao.com/*",
+    "*://dict.youdao.com/*"
+  ]
 }

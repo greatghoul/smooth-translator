@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import lscache from 'lscache'
-import Dict from './dict'
-import Fanyi from './fanyi'
+import Dict from '../translator/dict'
+import Fanyi from '../translator/fanyi'
 import { words } from 'lodash'
 
 const PAT_WORD = /^([a-z]+-?)+$/i

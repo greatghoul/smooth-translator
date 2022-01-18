@@ -1,17 +1,9 @@
-// import { dispatchMessage } from './helpers/message'
-// import { getActiveTab } from './helpers/tabs'
-// import defaults from './config/defaults'
-// import lscache from 'lscache'
-// import translator from './translator'
-// import { trim } from 'lodash'
-// import app from './app'
-
 const PAT_WORD = /^[a-z]+('|'s)?$/i
 
-function translateText (text) {
+function translate (text) {
   const sourceText = textStripe(text)
   const cacheKey = `text:v2:${sourceText}`
-  let result = lscache.get(cacheKey)
+  const result = lscache.get(cacheKey)
   return result ? Promise.resolve(result) : translator.translate(sourceText)
 }
 
@@ -20,9 +12,9 @@ function isWord(text) {
 }
 
 dispatchMessage({
-  translate (message, _, sendResponse) {
+  translate (message, sender, sendResponse) {
     getSettings("settings", settings => {
-      translateText(message.text).then(result => {
+      translate(message.text).then(result => {
         if (message.from === 'page') {
           result.timeout = options.notifyTimeout
         } else {
@@ -32,7 +24,8 @@ dispatchMessage({
         sendResponse(result)
       })
     })
-  },
+  }
+)
 
 //   selection (message, sender, sendResponse) {
 //     window.localStorage.setItem('current', message.text)

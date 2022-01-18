@@ -1,4 +1,6 @@
-Ractive.components.Result = Ractive.extend({
+import Ractive from "/scripts/libs/ractive.mjs"
+
+export default Ractive.extend({
   data: {
     result: null,
     theme: null,

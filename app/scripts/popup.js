@@ -1,21 +1,25 @@
+import Ractive from "/scripts/libs/ractive.mjs"
+
+import Translator from "/scripts//components/Translator.js"
+
+import { getSettings } from "/scripts/modules/settings.js"
+
 Ractive({
+  components: {
+    Translator,
+  },
   target: "#app",
-  template: '<Translator settings={{ settings }} loading={{ loading }} />',
+  template: `
+    {{#settings}}
+      <Translator settings={{ settings }} />
+    {{/settings}}
+  `,
   data: {
-    settings: DEFAULT_SETTINGS,
-    loading: true,
+    settings: null,
   },
   oninit () {
-    chrome.storage.sync.get("settings", result => {
-      this.set("settings", Object.assign(DEFAULT_SETTINGS, result.settings))
-      this.set("loading", false)
+    getSettings(settings => {
+      this.set("settings", settings)
     })
   },
-
-    //   getActiveTab(tab => this.initRule(tab.hostname))
-    // })
-    // chrome.runtime.sendMessage({ type: 'current' }, current => {
-    //   this.source = current
-    //   setTimeout(this.focus, 300)
-    // })
 })

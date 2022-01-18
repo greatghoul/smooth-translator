@@ -1,6 +1,18 @@
-Ractive.components.Translator = Ractive.extend({
+import Ractive from "/scripts/libs/ractive.mjs"
+
+import Loader from "/scripts/components/Loader.js"
+import Result from "/scripts/components/Result.js"
+import SettingsIcon from "/scripts/components/SettingsIcon.js"
+
+import { openExtensionPage } from "/scripts/modules/extension.js"
+
+export default Ractive.extend({
+  components: {
+    Loader,
+    Result,
+    SettingsIcon,
+  },
   data: {
-    loading: false,
     settings: null,
     source: "",
     result: null,
@@ -117,97 +129,3 @@ Ractive.components.Translator = Ractive.extend({
     }
   `
 })
-
-/*
-        <label :class="{ enabled: rule.enabled }" v-if="rule">
-          <input type="checkbox" checked="rule.enabled"
-                  @change="saveRule(rule)" />
-          在 <span class="site" :title="rule.site">{{ rule.site }}</span> 启用划词翻译
-        </label>
-
-<script>
-import _ from 'lodash'
-import URL from 'url-parse'
-import OptionsLoader from '../mixins/options-loader'
-import Loader from './Loader.vue'
-import Result from './Result.vue'
-import { openExtensionPage } from '../helpers/utils'
-import { getActiveTab } from '../helpers/tabs'
-
-export default {
-  mixins: [OptionsLoader],
-  created() {
-    this.initOptions().then(() => {
-      getActiveTab(tab => this.initRule(tab.hostname))
-    })
-    chrome.runtime.sendMessage({ type: 'current' }, current => {
-      this.source = current
-      setTimeout(this.focus, 300)
-    })
-  },
-  computed: {
-    translation() {
-      return this.result.translation || '未找到释义'
-    }
-  },
-  methods: {
-    initRule(site) {
-      const rule = { site }
-      if (site in this.options.siteRules) {
-        rule.enabled = this.options.siteRules[site]
-      } else {
-        rule.enabled = this.options.siteRules['*']
-      }
-      this.rule = rule;
-    },
-    focus() {
-      this.$nextTick(() => this.$refs.source.select())
-    },
-    escape() {
-      if (this.source) {
-        this.reset()
-      } else {
-        this.exit()
-      }
-    },
-    reset() {
-      this.source = ''
-      this.result = null
-    },
-    exit() {
-      window.close()
-    },
-    settings() {
-      openExtensionPage('pages/options.html')
-      this.exit()
-    },
-    translate: _.debounce(function() {
-      const message = {
-        type: 'translate',
-        text: this.source,
-        from: 'popup'
-      }
-
-      this.loading = true
-      chrome.runtime.sendMessage(message, (result) => {
-        this.result = result
-        this.loading = false
-      })
-    }, 300),
-  },
-  watch: {
-    source() {
-      if (this.source) {
-        this.translate()
-      } else {
-        this.reset()
-      }
-    },
-  },
-  components: {
-    Loader,
-    Result
-  },
-}
-</script>
-*/
