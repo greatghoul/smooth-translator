@@ -17,7 +17,7 @@ const getPhonetic = dom => {
   }).join("\n")
 }
 
-export const parseDictResult = (source, html) => {
+const parseTranslatorResult = (source, html) => {
   const parser = new DOMParser()
   const dom = parser.parseFromString(html, "text/html")
   const translation = getTranslation(dom)

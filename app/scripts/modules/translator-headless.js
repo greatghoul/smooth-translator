@@ -10,7 +10,8 @@ function initTranslator () {
     document.body.appendChild(container)
   }
 
-  translator = TranslatorHeadless.render(target)
+  translator = new TranslatorHeadless()
+  translator.render(container)
 }
 
 // function toggleLink (message, sender, sendResponse) {

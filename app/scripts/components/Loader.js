@@ -1,6 +1,4 @@
-import Ractive from "/scripts/libs/ractive.mjs"
-
-export default Ractive.extend({
+Ractive.components.Loader = Ractive.extend({
   template: `
     <div class="loader">
       <div class="progress"></div>

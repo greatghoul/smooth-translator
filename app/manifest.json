@@ -27,23 +27,23 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["scripts/page.js"],
-      "css": ["styles/page.css"]
+      "js": [
+        "scripts/modules/text.js",
+        "scripts/modules/translator-inspector.js"
+      ],
+      "all_frames": true
     },
     {
       "matches": ["<all_urls>"],
-      "js": ["scripts/inspector.js"],
-      "all_frames": true
-    },
-    {
-      "matches": [ "*://fanyi.youdao.com/*" ],
-      "js": [ "scripts/page-fanyi.js" ],
-      "all_frames": true
-    },
-    {
-      "matches": [ "*://dict.youdao.com/*" ],
-      "js": [ "scripts/page-dict.js" ],
-      "all_frames": true
+      "js": [
+        "scripts/libs/ractive.js",
+        "scripts/components/Result.js",
+        "scripts/components/ResultToast.js",
+        "scripts/components/TranslatorHeadless.js",
+        "scripts/modules/settings.js",
+        "scripts/modules/translator-parser.js",
+        "scripts/modules/translator-headless.js"
+      ]
     }
   ],
 
@@ -64,7 +64,6 @@
   ],
 
   "host_permissions": [
-    "*://fanyi.youdao.com/*",
-    "*://dict.youdao.com/*"
+    "https://www.youdao.com/result*"
   ]
 }

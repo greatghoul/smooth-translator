@@ -1,6 +1,4 @@
-import Ractive from "/scripts/libs/ractive.mjs"
-
-export default Ractive.extend({
+Ractive.components.Result = Ractive.extend({
   data: {
     result: null,
     theme: null,
@@ -23,11 +21,6 @@ export default Ractive.extend({
       color: #58afb1;
     }
   
-    .translation {
-      overflow-y: auto;
-      max-height: 200px;
-    }
-
     .translation p {
       margin: 0;
       padding: 0;

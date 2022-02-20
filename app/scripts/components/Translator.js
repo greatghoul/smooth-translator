@@ -1,18 +1,4 @@
-import Ractive from "/scripts/libs/ractive.mjs"
-
-import Loader from "/scripts/components/Loader.js"
-import Result from "/scripts/components/Result.js"
-import SettingsIcon from "/scripts/components/SettingsIcon.js"
-
-import { parseDictResult } from "/scripts/modules/translator-parser.js"
-import { strip } from "/scripts/modules/text.js"
-
-export default Ractive.extend({
-  components: {
-    Loader,
-    Result,
-    SettingsIcon,
-  },
+Ractive.components.Translator = Ractive.extend({
   data: {
     settings: null,
     source: "",
@@ -33,18 +19,16 @@ export default Ractive.extend({
       if (context.event.key !== "Enter") return
 
       context.event.preventDefault()
+      
+      chrome.runtime.sendMessage({ type: 'selection', source: this.get("source") })
       this.handleTranslate()      
     }
   },
   handleTranslate () {
     const source = strip(this.get("source"))
     this.set("loading", true)
-    chrome.runtime.sendMessage({
-      type: "translate",
-      from: "popup",
-      source: source,
-    }, html => {
-      const result = parseDictResult(source, html)
+    chrome.runtime.sendMessage({ type: "translate", from: "popup", source: source }, html => {
+      const result = parseTranslatorResult(source, html)
       this.set({ result, loading: false })
     })
   },

@@ -1,7 +1,7 @@
-export const isWord = text => {
+const isWord = text => {
   return /^[a-z]+$/img.test(text)
 }
 
-export const strip = text => {
+const strip = text => {
   return (text || "").replace(/(^\s+|\s+$)/, "")
 }
