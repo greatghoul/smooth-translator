@@ -19232,4 +19232,3 @@ defineProperty(Ractive.prototype, 'rendered', {
 });
 
 export default Ractive;
-//# sourceMappingURL=/home/travis/build/ractivejs/ractive/.gobble-build/10-transpile/.cache/ractive.mjs.map

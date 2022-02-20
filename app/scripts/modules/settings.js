@@ -1,4 +1,7 @@
 const DEFAULT_SETTINGS = {
+  // 最后一次查询的内容
+  current: "",
+  
   // 页面划词结果显示时间
   notifyTimeout: 5,
 

@@ -4,9 +4,8 @@ import Loader from "/scripts/components/Loader.js"
 import Result from "/scripts/components/Result.js"
 import SettingsIcon from "/scripts/components/SettingsIcon.js"
 
-import { openExtensionPage } from "/scripts/modules/extension.js"
 import { parseDictResult } from "/scripts/modules/translator-parser.js"
-import { strip, isWord } from "/scripts/modules/text.js"
+import { strip } from "/scripts/modules/text.js"
 
 export default Ractive.extend({
   components: {
@@ -19,26 +18,35 @@ export default Ractive.extend({
     source: "",
     result: null,
   },
-  on: {
-    handleSettings () {
-      openExtensionPage("pages/options.html")
-    },
-    handleTranslate (context) {
-      if (context.event.key !== "Enter") return
-      context.event.preventDefault()
-
-      const source = strip(this.get("source"))
-      this.set("loading", true)
-      chrome.runtime.sendMessage({
-        type: "translate",
-        from: "popup",
-        isWord: isWord(source),
-        source: source,
-      }, html => {
-        const result = parseDictResult(source, html)
-        this.set({ result, loading: false })
-      })
+  oninit () {
+    const settings = this.get("settings")
+    if (settings.current) {
+      this.set("source", settings.current)
+      this.handleTranslate()
     }
+  },
+  on: {
+    settingClicked () {
+      chrome.runtime.openOptionsPage()
+    },
+    sourceChanged (context) {
+      if (context.event.key !== "Enter") return
+
+      context.event.preventDefault()
+      this.handleTranslate()      
+    }
+  },
+  handleTranslate () {
+    const source = strip(this.get("source"))
+    this.set("loading", true)
+    chrome.runtime.sendMessage({
+      type: "translate",
+      from: "popup",
+      source: source,
+    }, html => {
+      const result = parseDictResult(source, html)
+      this.set({ result, loading: false })
+    })
   },
   template: `
     {{#loading}}
@@ -51,7 +59,7 @@ export default Ractive.extend({
         placeholder="输入文字进行翻译 ..."
         rows="3"
         value="{{ source }}"
-        on-keypress="handleTranslate"
+        on-keypress="sourceChanged"
       ></textarea>
     </header>
 
@@ -62,7 +70,7 @@ export default Ractive.extend({
     </main>
 
     <footer>
-      <a href="#" title="偏好设定" class="btn-settings" on-click="handleSettings">
+      <a href="#" title="偏好设定" class="btn-settings" on-click="settingClicked">
         <SettingsIcon />
       </a>
     </footer>
