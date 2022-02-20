@@ -6,10 +6,9 @@ export default Ractive.extend({
     theme: null,
   },
   template: `
-    <div class="result">
-      <h6 class="text" v-if="result.text">{{ result.text }}</h6>
-      <pre class="phonetic" v-if="result.phonetic">{{ result.phonetic }}</pre>
-      <div class="translation" v-html="result.translation"></div>
+    <div class="result theme-{{ theme }} status-{{ result.status }}">
+      {{#result.phonetic}}<pre class="phonetic">{{ result.phonetic }}</pre>{{/result.phonetic}}
+      {{#result.translation}}<div class="translation">{{{ result.translation }}}</div>{{/result.translation}}
     </div>
   `,
   css: `
@@ -19,28 +18,8 @@ export default Ractive.extend({
 
     .phonetic {
       margin: 0 0 5px 0;
-    }
-    
-    h6, code, pre {
-      border: none;
-      background: none;
-      color: inherit;
       padding: 0;
-      margin: 0;
-      text-transform: none;
-      font-size: 14px;
-      line-height: 20px;
-      white-space: normal;
-    }
-    
-    .text {
-      margin-bottom: 5px;
-      font-weight: 600;
-    }
-  
-    .phonetic {
-      padding-top: 5px !important;
-      padding-bottom: 10px !important;
+      font-size: 0.9em;
       color: #58afb1;
     }
   
@@ -49,11 +28,13 @@ export default Ractive.extend({
       max-height: 200px;
     }
 
-    .translation .additional {
-      color: #aaa !important;
-      font-size: 0.9em !important;
-      margin-top: 5px !important;
-      padding-bottom: 5px !important;
+    .translation p {
+      margin: 0;
+      padding: 0;
+    }
+
+    .translation p + p {
+      margin-top: 0.3em;
     }
 
     .theme-dark.status-success,

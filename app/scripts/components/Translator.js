@@ -5,6 +5,8 @@ import Result from "/scripts/components/Result.js"
 import SettingsIcon from "/scripts/components/SettingsIcon.js"
 
 import { openExtensionPage } from "/scripts/modules/extension.js"
+import { parseDictResult } from "/scripts/modules/translator-parser.js"
+import { strip, isWord } from "/scripts/modules/text.js"
 
 export default Ractive.extend({
   components: {
@@ -23,16 +25,18 @@ export default Ractive.extend({
     },
     handleTranslate (context) {
       if (context.event.key !== "Enter") return
-
       context.event.preventDefault()
 
+      const source = strip(this.get("source"))
       this.set("loading", true)
       chrome.runtime.sendMessage({
         type: "translate",
         from: "popup",
-        text: this.get("source"),
-      }, result => {
-        this.set({ result: result })
+        isWord: isWord(source),
+        source: source,
+      }, html => {
+        const result = parseDictResult(source, html)
+        this.set({ result, loading: false })
       })
     }
   },

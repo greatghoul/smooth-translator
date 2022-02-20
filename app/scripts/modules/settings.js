@@ -8,9 +8,6 @@ const DEFAULT_SETTINGS = {
   },
 }
 
-const textStripe = text => {
-  return (text || "").replace(/(^\s+|\s+$)/, "")
-}
 
 export const getSettings = (callback) => {
   chrome.storage.sync.get(null, settings => {
