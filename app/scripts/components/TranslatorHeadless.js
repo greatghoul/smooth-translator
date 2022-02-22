@@ -7,25 +7,27 @@ const TranslatorHeadless = Ractive.extend({
   translate (source) {
     const results = this.get("results")
     if (!results.find(x => x.source === source)) {
-      results.push({ source, translation: "正在翻译...", status: "pending" })
-      this.set({ results })  
+      this.push("results", { source, translation: "正在翻译...", status: "pending" })
+    }
+  },
+  on: {
+    closeResult (context) {
+      const result = context.component.get("result")
+      const index = this.get("results").findIndex(x => x.source === result.source)
+      this.splice("results", index, 1)
     }
   },
   template: `
     <div translator-headless>
       {{#each results as result }}
-        <ResultToast result={{ result }} />
+        <ResultToast
+          result={{ result }}
+          on-close="closeResult"
+        />
       {{/each}}
     </div>
   `,
   css: `
-    div {
-      all: initial;
-    }
-    div * {
-      all: revert;
-    }
-
     [translator-headless] {
       font-size: 14px;
       font-family: "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", "Microsoft Yahei", sans-serif;

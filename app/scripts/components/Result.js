@@ -1,10 +1,13 @@
 Ractive.components.Result = Ractive.extend({
   data: {
     result: null,
-    theme: null,
+    showSource: null,
   },
   template: `
     <div result status="{{ result.status }}">
+      {{#showSource}}
+        <h6 source>{{ result.source }}</h6>
+      {{/showSource}}
       {{#result.phonetic}}
         <pre phonetic>{{ result.phonetic }}</pre>
       {{/result.phonetic}}
@@ -28,6 +31,11 @@ Ractive.components.Result = Ractive.extend({
     [result][status=failure] {
       background: #fff3c8;
       color: #888888;
+    }
+
+    [source] {
+      font-size: 1em;
+      margin: 0 0 5px 0;
     }
 
     [phonetic] {

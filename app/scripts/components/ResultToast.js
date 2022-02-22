@@ -5,49 +5,39 @@ Ractive.components.ResultToast = Ractive.extend({
       result: {}
     }
   },
-  oninit () {
-    this.handleTranslate()
-  },
-  handleClose () {
-    this.clearTimer()
-
-    const result = this.get("result")
-    // result.closed = true
-    this.set({ result })
-  },
   startTimer () {
-    const timer = setTimeout(() => {
-      this.handleClose()
-    }, 5000)
+    const timer = setTimeout(() => this.fire("close"), 5000)
+    this.set("timer", timer)
   },
   clearTimer () {
     const timer = this.get("timer")
     clearTimeout(timer)
-  },
-  handleTranslate () {
-    let result = this.get("result")
-    chrome.runtime.sendMessage({ type: "translate", source: result.source, from: "page" }, html => {
-      result = parseTranslatorResult(result.source, html)
-      this.set({ result })
-      this.startTimer()
-    })
+    this.set("timer", null)
   },
   on: {
-    mouseOver () {
+    init () {
+      let result = this.get("result")
+      chrome.runtime.sendMessage({ type: "translate", source: result.source, from: "page" }, html => {
+        result = parseTranslatorResult(result.source, html)
+        this.set({ result })
+        this.startTimer()
+      })
+    },
+    active () {
       this.clearTimer()
     },
-    mouseOut () {
+    inactive () {
       this.startTimer()
     },
-    closeClicked () {
-      this.handleClose()
+    close () {
+      this.clearTimer()
     }
   },
   template: `
     {{#unless result.closed }}
-      <div result-toast on-mouseover="mouseOver" on-mouseout="mouseOut">
-        <a href="javascript:;" on-click="closeClicked">&times;</a>
-        <Result result={{result}} />
+      <div result-toast on-mouseover="active" on-mouseout="inactive">
+        <a href="javascript:;" on-click="close">&times;</a>
+        <Result result={{result}} showSource />
       </div>
     {{/unless}}
   `,

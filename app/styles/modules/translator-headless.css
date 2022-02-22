@@ -1,0 +1,7 @@
+.crx-smooth-translator {
+  all: initial;
+}
+
+.crx-smooth-translator * {
+  all: revert;
+}

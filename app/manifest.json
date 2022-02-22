@@ -43,6 +43,9 @@
         "scripts/modules/settings.js",
         "scripts/modules/translator-parser.js",
         "scripts/modules/translator-headless.js"
+      ],
+      "css": [
+        "styles/modules/translator-headless.css"
       ]
     }
   ],
