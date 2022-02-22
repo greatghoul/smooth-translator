@@ -12,10 +12,8 @@ Ractive.components.ResultToast = Ractive.extend({
     this.clearTimer()
 
     const result = this.get("result")
-    result.closed = true
+    // result.closed = true
     this.set({ result })
-
-    this.detach()
   },
   startTimer () {
     const timer = setTimeout(() => {
@@ -47,35 +45,33 @@ Ractive.components.ResultToast = Ractive.extend({
   },
   template: `
     {{#unless result.closed }}
-    <ractive on-mouseover="mouseOver" on-mouseout="mouseOut">
-      <a href="javascript:;" class="close" on-click="closeClicked">&times;</a>
-      <Result result={{result}} theme="dark" />
-    </ractive>
+      <div result-toast on-mouseover="mouseOver" on-mouseout="mouseOut">
+        <a href="javascript:;" on-click="closeClicked">&times;</a>
+        <Result result={{result}} />
+      </div>
     {{/unless}}
   `,
   css: `
-    ractive {
+    [result-toast] {
       display: block;
       max-width: 250px;
       min-width: 150px;
       line-height: 1.5;
       font-size: 14px;
-      margin-bottom: 5px;
-      border-radius: 5px;
-      box-shadow: 3px 3px 3px #000000;
-      opacity: 0.9;
+      margin-bottom: 8px;
+      box-shadow: 1px 1px 2px 0 #0000007a;
     }
   
-    ractive a.close {
+    [result-toast] > a {  
       float: right;
-      text-decoration: none;
       margin-right: 5px;
+      color: #555;
+      text-decoration: none;
       font-size: .8em;
-      color: #cecece;
     }
 
-    ractive a.close:hover {
-      color: #ffffff;
+    [result-toast] a:hover {
+      color: #000;
     }
   `
 })

@@ -7,6 +7,7 @@ function initTranslator () {
   if (!container) {
     container = document.createElement("div")
     container.id = "crx-smooth-translator"
+    container.style = "all: initial;"
     document.body.appendChild(container)
   }
 
