@@ -18,7 +18,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   console.log("Reiceived message: ", JSON.stringify(message))
   if (message.type === "translate-selection") {
     initTranslator()
-    translator.translate(message.source)
+    translator.fire("translate", message.source)
   }
 
   return true

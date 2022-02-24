@@ -1,16 +1,21 @@
 const TranslatorHeadless = Ractive.extend({
   data () {
     return {
+      resultTimeout: null,
       results: []
     }
   },
-  translate (source) {
-    const results = this.get("results")
-    if (!results.find(x => x.source === source)) {
-      this.push("results", { source, translation: "正在翻译...", status: "pending" })
-    }
-  },
   on: {
+    init () {
+      const message = { type: "get-settings", keys: "resultTimeout" }
+      chrome.runtime.sendMessage(message, data => this.set(data))
+    },
+    translate (context, source) {
+      const results = this.get("results")
+      if (!results.find(x => x.source === source)) {
+        this.unshift("results", { source, translation: "正在翻译...", status: "pending" })
+      }
+    },
     closeResult (context) {
       const result = context.component.get("result")
       const index = this.get("results").findIndex(x => x.source === result.source)
@@ -22,6 +27,7 @@ const TranslatorHeadless = Ractive.extend({
       {{#each results as result }}
         <ResultToast
           result={{ result }}
+          resultTimeout={{ resultTimeout }}
           on-close="closeResult"
         />
       {{/each}}
@@ -47,34 +53,3 @@ const TranslatorHeadless = Ractive.extend({
     }
   `
 })
-
-
-// export default {
-//   mixins: [OptionsLoader],
-//   data() {
-//     return {
-//       results: [],
-//     };
-//   },
-//   methods: {
-//     translate(text) {
-//       if (this.findIndex(text) == -1) {
-//         this.results.push({
-//           text: text,
-//           status: 'pending',
-//           show: true
-//         });
-//       }
-//     },
-//     removeResult(text) {
-//       this.results.splice(this.findIndex(text), 1);
-//     },
-//     findIndex(text) {
-//       return _.findIndex(this.results, { text });
-//     }
-//   },
-//   components: {
-//     ResultToast,
-//   },
-
-// }

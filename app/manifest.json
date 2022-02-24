@@ -23,7 +23,7 @@
   },
 
   "options_page": "pages/options.html",
-
+  
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
@@ -40,7 +40,6 @@
         "scripts/components/Result.js",
         "scripts/components/ResultToast.js",
         "scripts/components/TranslatorHeadless.js",
-        "scripts/modules/settings.js",
         "scripts/modules/translator-parser.js",
         "scripts/modules/translator-headless.js"
       ],

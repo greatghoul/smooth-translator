@@ -2,11 +2,13 @@ Ractive.components.ResultToast = Ractive.extend({
   data () {
     return {
       timer: null,
-      result: {}
+      resultTimeout: null,
+      result: null,
     }
   },
   startTimer () {
-    const timer = setTimeout(() => this.fire("close"), 5000)
+    const resultTimeout = this.get("resultTimeout")
+    const timer = setTimeout(() => this.fire("close"), resultTimeout)
     this.set("timer", timer)
   },
   clearTimer () {
@@ -31,15 +33,19 @@ Ractive.components.ResultToast = Ractive.extend({
     },
     close () {
       this.clearTimer()
+    },
+    noop (context) {
+      context.event.stopPropagation()
     }
   },
   template: `
-    {{#unless result.closed }}
-      <div result-toast on-mouseover="active" on-mouseout="inactive">
-        <a href="javascript:;" on-click="close">&times;</a>
-        <Result result={{result}} showSource />
-      </div>
-    {{/unless}}
+    <div result-toast
+      on-mouseover="active"
+      on-mouseout="inactive"
+    >
+      <a href="javascript:;" on-click="close" on-mouseup="noop">&times;</a>
+      <Result result={{result}} showSource />
+    </div>
   `,
   css: `
     [result-toast] {

@@ -1,17 +1,19 @@
 Ractive.components.Translator = Ractive.extend({
-  data: {
-    settings: null,
-    source: "",
-    result: null,
-  },
-  oninit () {
-    const settings = this.get("settings")
-    if (settings.current) {
-      this.set("source", settings.current)
-      this.handleTranslate()
+  data () {
+    return {
+      settings: {},
+      source: "",
+      result: null,  
     }
   },
   on: {
+    init () {
+      chrome.runtime.sendMessage({ type: "get-settings" }, settings => this.set({ settings }))
+      chrome.storage.local.get({ current: "" }, ({ current }) => {
+        this.set({ source: current })
+        this.handleTranslate()
+      })
+    },
     settingClicked () {
       chrome.runtime.openOptionsPage()
     },
