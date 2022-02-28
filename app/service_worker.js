@@ -25,10 +25,16 @@ const getSettings = (message, callback) => {
   chrome.storage.sync.get(message.keys, callback)
 }
 
+const setSettings = (message) => {
+  chrome.storage.sync.set(message.settings)
+}
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   console.log("Reiceived message: ", JSON.stringify(message))
   if (message.type === "get-settings") {
     getSettings(message, sendResponse)
+  } else if (message.type === "set-settings") {
+    setSettings(message)
   } else if (message.type === "translate") {
     message.source && translate(message.source).then(sendResponse)
   } else if (message.type === "selection") {
