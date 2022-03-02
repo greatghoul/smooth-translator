@@ -44,6 +44,11 @@ Ractive.components.Result = Ractive.extend({
       font-size: 0.9em;
       color: #58afb1;
     }
+
+    [translation] {
+      overflow-y: auto;
+      max-height: 200px;
+    }
   
     [translation] p {
       margin: 0;

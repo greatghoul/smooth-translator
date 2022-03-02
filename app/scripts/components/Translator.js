@@ -77,7 +77,7 @@ Ractive.components.Translator = Ractive.extend({
 
     <main>
       {{#result}}
-        <Result result="{{ result }}" theme="light" />
+        <Result result="{{ result }}" compact />
       {{/result}}
     </main>
 
