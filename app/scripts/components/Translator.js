@@ -1,14 +1,13 @@
 Ractive.components.Translator = Ractive.extend({
   data () {
     return {
-      settings: {},
+      settings: null,
       source: "",
       result: null,  
     }
   },
   on: {
     init () {
-      chrome.runtime.sendMessage({ type: "get-settings" }, settings => this.set({ settings }))
       chrome.storage.local.get({ current: "" }, ({ current }) => {
         this.set({ source: current })
         this.handleTranslate()

@@ -22,7 +22,7 @@ const translateSelection = (tabId, source) => {
 }
 
 const getSettings = (message, callback) => {
-  chrome.storage.sync.get(message.keys, callback)
+  chrome.storage.sync.get(message.keys || DEFAULT_SETTINGS, callback)
 }
 
 const setSettings = (message) => {
