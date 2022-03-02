@@ -1,12 +1,14 @@
 Ractive.components.SiteRulesManager = Ractive.extend({
   data () {
     return {
+      q: "",
       ruleMap: {},
       ruleList: [],
     }
   },
   ruleMapToList (ruleMap) {
     return Object.entries(ruleMap).map(([site, enabled]) => ({ site, enabled }))
+                 .sort((a, b) => a.site.localeCompare(b.site))
   },
   ruleListToMap (ruleList) {
     const entries = this.get("ruleList").map(({ site, enabled }) => [site, enabled])
@@ -31,47 +33,22 @@ Ractive.components.SiteRulesManager = Ractive.extend({
     },
   },
   template: `
-    <table>
-      <thead>
-        <tr>
-          <th>启用</th>
-          <th>网站</th>
-          <th>删除</th>
-        </tr>
-      </thead>
-      <tbody>
-        {{#each ruleList as rule:index }}
-          <SiteRule rule="{{ rule }}" index="{{ index }}" />
-        {{/each}}
-      </tbody>
-    </table>
+    <input type="search" value="{{ q }}" placeholder="按照域名搜索..." />
+    <ul>
+      {{#each ruleList as rule:index }}
+        <SiteRule rule="{{ rule }}" index="{{ index }}" q={{q}} />
+      {{/each}}
+    </ul>
   `,
   css: `
-    table {
+    input[type=search] {
       width: 100%;
-      border-collapse: collapse;
+      margin-bottom: 5px;
     }
-
-    tr {
-      height: 2.5em;
-    }
-    tr:hover {
-      background-color: #eee;
-    }
-
-    th {
-      text-align: left;
-      background-color: #ddd;
-    }
-    th:first-of-type,
-    th:last-of-type {
-      width: 3em;
-    }
-
-    th,
-    td {
-      padding-left: 1em;
-      padding-right: 1em;
+    ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
     }
   `
 })

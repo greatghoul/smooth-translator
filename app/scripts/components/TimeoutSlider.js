@@ -24,7 +24,12 @@ Ractive.components.TimeoutSlider = Ractive.extend({
         value="{{ value }}"
         on-change="changeValue"
       />
-      <span class="label label-info">{{ seconds }} 秒</span>
+      <output>{{ seconds }} 秒</output>
     </div>
+  `,
+  css: `
+    input[type=range] {
+      vertical-align: sub;
+    }
   `
 })

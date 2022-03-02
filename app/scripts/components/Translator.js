@@ -2,16 +2,41 @@ Ractive.components.Translator = Ractive.extend({
   data () {
     return {
       settings: null,
+      hostname: null,
+      hostopen: null,
       source: "",
-      result: null,  
+      result: null,
     }
+  },
+  loadCurrent () {
+    chrome.storage.local.get({ current: "" }, ({ current }) => {
+      this.set({ source: current })
+      this.handleTranslate()
+    })
+  },
+  loadRule () {
+    const hostname = this.get("hostname")
+    if (!hostname) return
+
+    const siteRules = this.get("settings.siteRules")
+    if (hostname in siteRules) {
+      this.set("hostopen", siteRules[hostname])
+    } else {
+      this.set("hostopen", siteRules["*"])
+    }
+  },
+  handleTranslate () {
+    const source = strip(this.get("source"))
+    this.set("loading", true)
+    chrome.runtime.sendMessage({ type: "translate", from: "popup", source: source }, html => {
+      const result = parseTranslatorResult(source, html)
+      this.set({ result, loading: false })
+    })
   },
   on: {
     init () {
-      chrome.storage.local.get({ current: "" }, ({ current }) => {
-        this.set({ source: current })
-        this.handleTranslate()
-      })
+      this.loadCurrent()
+      this.loadRule()
     },
     settingClicked () {
       chrome.runtime.openOptionsPage()
@@ -23,15 +48,17 @@ Ractive.components.Translator = Ractive.extend({
       
       chrome.runtime.sendMessage({ type: 'selection', source: this.get("source") })
       this.handleTranslate()      
+    },
+    toggleSiteRule () {
+      const settings = this.get("settings")
+      const hostname = this.get("hostname")
+      const hostopen = this.get("hostopen")
+
+      settings.siteRules[hostname] = hostopen
+      this.set({ settings })
+
+      chrome.runtime.sendMessage({ type: "set-settings", settings: settings })
     }
-  },
-  handleTranslate () {
-    const source = strip(this.get("source"))
-    this.set("loading", true)
-    chrome.runtime.sendMessage({ type: "translate", from: "popup", source: source }, html => {
-      const result = parseTranslatorResult(source, html)
-      this.set({ result, loading: false })
-    })
   },
   template: `
     {{#loading}}
@@ -51,13 +78,20 @@ Ractive.components.Translator = Ractive.extend({
     <main>
       {{#result}}
         <Result result="{{ result }}" theme="light" />
-      {{/result}} 
+      {{/result}}
     </main>
 
     <footer>
       <a href="#" title="偏好设定" class="btn-settings" on-click="settingClicked">
         <SettingsIcon />
       </a>
+      
+      {{#hostname}}
+        <label class-enabled="hostopen" title="在 {{ hostname }} 启用划词翻译">
+          <input type="checkbox" checked="{{ hostopen }}" on-change="toggleSiteRule" />
+          {{ hostname }}
+        </label>
+      {{/hostname}}
     </footer>
   `,
   css: `
@@ -93,6 +127,7 @@ Ractive.components.Translator = Ractive.extend({
       height: 24px;
       line-height: 24px;
       padding: 0 5px;
+      margin-top: 5px;
     }
 
     footer .btn-settings {
@@ -100,29 +135,25 @@ Ractive.components.Translator = Ractive.extend({
     }
 
     footer label {
-      font-size: 0.9em;
+      display: block;
+      margin-right: 30px;
       color: gray;
       user-select: none;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 0.9em;
+      vertical-align: bottom;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     footer label.enabled {
       color: green;
     }
 
-    footer label input[type="checkbox] {
-      margin: 0;
-    }
-    
-    footer label .site {
-      font-style: italic;
-      font-weight: bold;
-      font-size: .9em;
-      display: inline-block;
-      vertical-align: bottom;
-      max-width: 50px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+    footer label input {
+      vertical-align: text-top;
     }
   `
 })

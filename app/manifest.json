@@ -24,7 +24,7 @@
 
   "options_ui": {
     "page": "pages/options.html",
-    "open_in_tab": true
+    "open_in_tab": false
   },
   
   "content_scripts": [
