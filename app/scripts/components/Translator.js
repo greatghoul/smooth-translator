@@ -2,28 +2,16 @@ Ractive.components.Translator = Ractive.extend({
   data () {
     return {
       settings: null,
-      hostname: null,
-      hostopen: null,
+      currentRule: null,
       source: "",
       result: null,
     }
   },
-  loadCurrent () {
-    chrome.storage.local.get({ current: "" }, ({ current }) => {
-      this.set({ source: current })
+  loadCurrentSource () {
+    chrome.storage.local.get({ currentSource: "" }, ({ currentSource }) => {
+      this.set({ source: currentSource })
       this.handleTranslate()
     })
-  },
-  loadRule () {
-    const hostname = this.get("hostname")
-    if (!hostname) return
-
-    const siteRules = this.get("settings.siteRules")
-    if (hostname in siteRules) {
-      this.set("hostopen", siteRules[hostname])
-    } else {
-      this.set("hostopen", siteRules["*"])
-    }
   },
   handleTranslate () {
     const source = strip(this.get("source"))
@@ -35,8 +23,7 @@ Ractive.components.Translator = Ractive.extend({
   },
   on: {
     init () {
-      this.loadCurrent()
-      this.loadRule()
+      this.loadCurrentSource()
     },
     settingClicked () {
       chrome.runtime.openOptionsPage()
@@ -49,12 +36,11 @@ Ractive.components.Translator = Ractive.extend({
       chrome.runtime.sendMessage({ type: 'selection', source: this.get("source") })
       this.handleTranslate()      
     },
-    toggleSiteRule () {
+    toggleCurrentRule () {
       const settings = this.get("settings")
-      const hostname = this.get("hostname")
-      const hostopen = this.get("hostopen")
+      const currentRule = this.get("currentRule")
 
-      settings.siteRules[hostname] = hostopen
+      settings.siteRules[currentRule.site] = currentRule.enabled
       this.set({ settings })
 
       chrome.runtime.sendMessage({ type: "set-settings", settings: settings })
@@ -86,12 +72,12 @@ Ractive.components.Translator = Ractive.extend({
         <SettingsIcon />
       </a>
       
-      {{#hostname}}
-        <label class-enabled="hostopen" title="在 {{ hostname }} 启用划词翻译">
-          <input type="checkbox" checked="{{ hostopen }}" on-change="toggleSiteRule" />
-          {{ hostname }}
+      {{#if currentRule}}
+        <label class-enabled="currentRule.enabled" title="在 {{ currentRule.site }} 启用划词翻译">
+          <input type="checkbox" checked="{{ currentRule.enabled }}" on-change="toggleCurrentRule" />
+          {{ currentRule.site }}
         </label>
-      {{/hostname}}
+      {{/if}}
     </footer>
   `,
   css: `

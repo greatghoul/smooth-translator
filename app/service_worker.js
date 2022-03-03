@@ -21,25 +21,58 @@ const translateSelection = (tabId, source) => {
   })
 }
 
-const getSettings = (message, callback) => {
-  chrome.storage.sync.get(message.keys || DEFAULT_SETTINGS, callback)
+const getSettings = (keys, callback) => {
+  chrome.storage.sync.get(keys || DEFAULT_SETTINGS, callback)
 }
 
-const setSettings = (message) => {
-  chrome.storage.sync.set(message.settings)
+const setSettings = settings => {
+  chrome.storage.sync.set(settings)
+}
+
+const getHostname = url => {
+  const { hostname, protocol } = new URL(url)
+  if (/^https?:$/.test(protocol)) {
+    return hostname
+  } else {
+    return null
+  }
+}
+
+const getCurrentRule = callback => {
+  getSettings(null, ({ siteRules }) => {
+    chrome.tabs.query({ active: true }, tabs => {
+      const hostname = getHostname(tabs[0].url)
+      if (!hostname) {
+        callback(null)
+        return
+      }
+
+      if (hostname in siteRules) {
+        callback({ site: hostname, enabled: siteRules[hostname] })
+      } else {
+        callback({ site: hostname, enabled: siteRules["*"] })
+      }
+    })
+  }) 
 }
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   console.log("Reiceived message: ", JSON.stringify(message))
   if (message.type === "get-settings") {
-    getSettings(message, sendResponse)
+    getSettings(message.keys, sendResponse)
   } else if (message.type === "set-settings") {
-    setSettings(message)
+    setSettings(message.settings)
   } else if (message.type === "translate") {
     message.source && translate(message.source).then(sendResponse)
   } else if (message.type === "selection") {
-    chrome.storage.local.set({ current: message.source })
-    message.isWord && translateSelection(sender.tab.id, message.source)
+    chrome.storage.local.set({ currentSource: message.source })
+    getCurrentRule(siteRule => {
+      if (siteRule && siteRule.enabled && message.isWord) {
+        translateSelection(sender.tab.id, message.source)
+      }
+    })
+  } else if (message.type === "get-current-rule") {
+    getCurrentRule(siteRule => sendResponse(siteRule))
   }
 
   return true
