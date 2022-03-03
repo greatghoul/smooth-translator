@@ -21,6 +21,9 @@ Ractive.components.Translator = Ractive.extend({
       this.set({ result, loading: false })
     })
   },
+  setCurrentSource (source) {
+    chrome.runtime.sendMessage({ type: "set-current-source", source: source })
+  },
   on: {
     init () {
       this.loadCurrentSource()
@@ -29,12 +32,28 @@ Ractive.components.Translator = Ractive.extend({
       chrome.runtime.openOptionsPage()
     },
     sourceChanged (context) {
-      if (context.event.key !== "Enter") return
+      const event = context.event
+      const source = strip(this.get("source"))
 
-      context.event.preventDefault()
-      
-      chrome.runtime.sendMessage({ type: 'selection', source: this.get("source") })
-      this.handleTranslate()      
+      // clear textarea on pressing escape key
+      if (event.key === "Escape" && source) {
+        event.preventDefault()
+        this.set({ source: "" })
+        this.setCurrentSource("")
+        return
+      }
+
+      // accept line break on pressing shift + enter
+      if (event.key === "Enter" && event.shiftKey) {
+        return
+      }
+
+      // submit translation on pressing enter
+      if (event.key === "Enter") {
+        event.preventDefault()
+        this.setCurrentSource(source)
+        this.handleTranslate()  
+      }
     },
     toggleCurrentRule () {
       const settings = this.get("settings")
@@ -57,7 +76,7 @@ Ractive.components.Translator = Ractive.extend({
         placeholder="输入文字进行翻译 ..."
         rows="3"
         value="{{ source }}"
-        on-keypress="sourceChanged"
+        on-keydown="sourceChanged"
       ></textarea>
     </header>
 

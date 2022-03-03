@@ -6,13 +6,16 @@ Ractive.components.Result = Ractive.extend({
   template: `
     <div result status="{{ result.status }}">
       {{#showSource}}
-        <h6 source>{{ result.source }}</h6>
+        <h6 source title="{{ result.source }}">{{ result.source }}</h6>
       {{/showSource}}
-      {{#result.phonetic}}
-        <pre phonetic>{{ result.phonetic }}</pre>
-      {{/result.phonetic}}
       {{#result.translation}}
-        <div translation>{{{ result.translation }}}</div>
+        <div translation>
+          {{#result.phonetic}}
+            <pre phonetic>{{ result.phonetic }}</pre>
+          {{/result.phonetic}}
+
+          {{{ result.translation }}}
+        </div>
       {{/result.translation}}
     </div>
   `,
@@ -36,6 +39,9 @@ Ractive.components.Result = Ractive.extend({
     [source] {
       font-size: 1em;
       margin: 0 0 5px 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     [phonetic] {
@@ -48,6 +54,32 @@ Ractive.components.Result = Ractive.extend({
     [translation] {
       overflow-y: auto;
       max-height: 200px;
+      
+    }
+    [translation]::-webkit-scrollbar{
+      width:5px;
+      background-color:#ddeadd;
+    }
+    [translation]::-webkit-scrollbar:horizontal{
+      height:5px;
+    }
+    [translation]::-webkit-scrollbar-track{
+      border:1px #ddeadd solid;
+      border-radius:5px;
+      -webkit-box-shadow:0 0 6px #ddeadd inset;
+    }
+    [translation]::-webkit-scrollbar-thumb{
+      background-color:#c1c8c1;
+      border:1px solid #c1c8c1;
+      border-radius:5px;
+    }
+    [translation]::-webkit-scrollbar-thumb:hover{
+      background-color:#c1c8c1;
+      border:1px solid #c1c8c1;
+    }
+    [translation]::-webkit-scrollbar-thumb:active{
+      background-color:#c1c8c1;
+      border:1px solid #c1c8c1;
     }
   
     [translation] p {

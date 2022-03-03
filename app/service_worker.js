@@ -56,6 +56,10 @@ const getCurrentRule = callback => {
   }) 
 }
 
+const setCurrentSource = source => {
+  chrome.storage.local.set({ currentSource: source })
+}
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   console.log("Reiceived message: ", JSON.stringify(message))
   if (message.type === "get-settings") {
@@ -65,12 +69,14 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   } else if (message.type === "translate") {
     message.source && translate(message.source).then(sendResponse)
   } else if (message.type === "selection") {
-    chrome.storage.local.set({ currentSource: message.source })
+    setCurrentSource(message.source)
     getCurrentRule(siteRule => {
-      if (siteRule && siteRule.enabled && message.isWord) {
+      if (message.force || (siteRule && siteRule.enabled && message.isWord)) {
         translateSelection(sender.tab.id, message.source)
       }
     })
+  } else if (message.type === "set-current-source") {
+    setCurrentSource(message.source)
   } else if (message.type === "get-current-rule") {
     getCurrentRule(siteRule => sendResponse(siteRule))
   }
