@@ -29,6 +29,7 @@ Ractive.components.OptionsApp = Ractive.extend({
         checked="{{settings.forceTranslate}}"
         on-change="handleForceTranslateChange"
       />
+      <p class="hint"><strong>小技巧：</strong>你可以按住 Alt 键来选择超链接中的文本而不触发链接</p>
     </FieldSet>
 
     <FieldSet legend="启用/禁用页面划词翻译">
@@ -37,5 +38,12 @@ Ractive.components.OptionsApp = Ractive.extend({
         on-change="settingsChanged"
       />
     </FieldSet>
+  `,
+  css: `
+    .hint {
+      color: #888;
+      font-size: 0.9em;
+      margin: 5px;
+    }
   `
 })

@@ -74,9 +74,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   } else if (message.type === "selection") {
     setCurrentSource(message.source)
     getCurrentRule(siteRule => {
-      if (message.force || (siteRule && siteRule.enabled && message.isWord)) {
-        translateSelection(sender.tab.id, message.source)
-      }
+      getSettings(null, ({ forceTranslate }) => {
+        if ((forceTranslate && message.force) || (siteRule && siteRule.enabled && message.isWord)) {
+          translateSelection(sender.tab.id, message.source)
+        }
+      })
     })
   } else if (message.type === "set-current-source") {
     setCurrentSource(message.source)
