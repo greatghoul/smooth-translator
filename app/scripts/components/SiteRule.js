@@ -13,6 +13,9 @@ Ractive.components.SiteRule = Ractive.extend({
     match () {
       const site = this.get("rule.site")
       return site === "*" || site.indexOf(this.get("q")) != -1
+    },
+    label () {
+      return this.get("global") ? "默认" : this.get("rule").site
     }
   },
   on: {
@@ -26,14 +29,11 @@ Ractive.components.SiteRule = Ractive.extend({
   template: `
     {{#if match}}
       <li>
-        <label>
-          <input type="checkbox" checked={{ rule.enabled }} on-change="handleChange" />
-          {{#if global}}
-            默认
-          {{else}}
-            {{ rule.site }}
-          {{/if}}
-        </label>
+        <Checkbox
+          label="{{ label }}"
+          checked="{{ rule.enabled }}"
+          on-change="handleChange"
+        />
         {{#unless global}}
           <button type="link" on-click="handleRemove">&times;</button>
         {{/unless}}
@@ -57,16 +57,8 @@ Ractive.components.SiteRule = Ractive.extend({
       margin-left: 5px;
     }
 
-    label {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    Label {
       width: 300px;
-    }
-
-    label input[type=checkbox] {
-      margin: 0 5px 0 0;
-      vertical-align: bottom;
     }
   `
 })

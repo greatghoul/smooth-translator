@@ -11,12 +11,23 @@ Ractive.components.OptionsApp = Ractive.extend({
       this.set("settings", updatedSettings)
       chrome.runtime.sendMessage({ type: "set-settings", settings: updatedSettings })
     },
+    handleForceTranslateChange (context, checked) {
+      this.fire("settingsChanged", "forceTranslate", checked)
+    }
   },
   template: `
     <FieldSet legend="划词翻译结果显示时长">
       <TimeoutSlider
         value={{ settings.resultTimeout }}
         on-change="settingsChanged"
+      />
+    </FieldSet>
+
+    <FieldSet legend="强制划词翻译">
+      <Checkbox
+        label="按住 Alt 键，在网页中选择文本，可以强制进行翻译"
+        checked="{{settings.forceTranslate}}"
+        on-change="handleForceTranslateChange"
       />
     </FieldSet>
 

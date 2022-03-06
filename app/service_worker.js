@@ -4,6 +4,9 @@ const DEFAULT_SETTINGS = {
   // 页面划词结果显示时间
   resultTimeout: 5000,
 
+  // 强制划词翻译
+  forceTranslate: true,
+
   // 划词翻译在各个网站上是否开启
   siteRules: {
     '*': true
