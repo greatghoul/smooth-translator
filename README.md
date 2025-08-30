@@ -32,3 +32,7 @@
 穆译是一个开源应用，如果你想审查代码或者参与开发，请访问
 
 https://github.com/greatghoul/smooth-translator
+
+## 许可证
+
+MIT License - 详见 [LICENSE](LICENSE) 文件
